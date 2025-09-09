@@ -87,20 +87,28 @@ class RandomTurnChess:
         Get a move from the appropriate engine.
         Returns None if no engine is configured or if engine fails.
         """
-        engine_process = self.white_engine_process if is_white else self.black_engine_process
         engine_name = self.white_engine if is_white else self.black_engine
         
-        if not engine_process:
+        if not engine_name:
             return None
             
         try:
-            # Create a temporary board with the correct turn for the engine
-            temp_board = self.board.copy()
-            temp_board.turn = is_white
-            
-            # Get the best move from the engine
-            result = engine_process.play(temp_board, chess.engine.Limit(time=1.0))
-            return result.move
+            # Create a fresh engine process to avoid state confusion
+            with chess.engine.SimpleEngine.popen_uci(engine_name) as engine:
+                # Create a fresh board copy and clear the move stack
+                fresh_board = self.board.copy()
+                fresh_board.clear_stack()
+                
+                # Get the best move from the engine using the fresh board
+                result = engine.play(fresh_board, chess.engine.Limit(time=1.0))
+                move = result.move
+                
+                # Verify the move is legal for the current player
+                if not self.is_legal_move(move):
+                    print(f"Engine made illegal move: {move} (expected {'White' if is_white else 'Black'} move)")
+                    return None
+                
+                return move
         except Exception as e:
             print(f"Engine '{engine_name}' error: {e}")
             return None
