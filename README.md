@@ -87,10 +87,11 @@ python chess_ui.py --mode pv-engine-black --black-engine /path/to/engine --wait-
 
 ### Game Rules
 
-- Standard chess rules apply
+- Modified chess rules: **Game ends only when a king is captured, not on checkmate**
+- Players can move into check and capture the king directly
 - After each move, a coin is flipped to determine the next player
 - The same player can move multiple times in a row if the coin flips favor them
-- Game ends with checkmate, stalemate, or other standard chess termination conditions
+- Game ends with king capture, stalemate, or other standard chess termination conditions
 
 ## Example Game Flow
 

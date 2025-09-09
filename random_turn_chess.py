@@ -126,15 +126,22 @@ class RandomTurnChess:
         """
         return list(self.board.legal_moves)
     
+    def get_pseudo_legal_moves(self) -> List[chess.Move]:
+        """
+        Get all pseudo-legal moves for the current player.
+        This allows moves that would normally be illegal (like moving into check).
+        """
+        return list(self.board.pseudo_legal_moves)
+    
     def make_move(self, move: chess.Move) -> bool:
         """
-        Attempt to make a move. The move must be legal for the current player.
+        Attempt to make a move. The move must be pseudo-legal for the current player.
         Returns True if the move was successful, False otherwise.
         """
         if self.game_over:
             return False
             
-        if move not in self.get_legal_moves():
+        if move not in self.get_pseudo_legal_moves():
             return False
             
         # Record the move and which player made it
@@ -185,10 +192,15 @@ class RandomTurnChess:
     def _check_game_over(self):
         """
         Check if the game is over and set the winner.
+        Game ends only when a king is captured, not on checkmate.
         """
-        if self.board.is_checkmate():
+        # Check if a king has been captured
+        if not self.board.king(chess.WHITE):
             self.game_over = True
-            self.winner = 'Black' if self.board.turn else 'White'
+            self.winner = 'Black'  # White king captured, Black wins
+        elif not self.board.king(chess.BLACK):
+            self.game_over = True
+            self.winner = 'White'  # Black king captured, White wins
         elif self.board.is_stalemate():
             self.game_over = True
             self.winner = 'Draw'
@@ -223,9 +235,10 @@ class RandomTurnChess:
     
     def is_legal_move(self, move: chess.Move) -> bool:
         """
-        Check if a move is legal for the current player.
+        Check if a move is pseudo-legal for the current player.
+        This allows moves that would normally be illegal (like moving into check).
         """
-        return move in self.get_legal_moves()
+        return move in self.get_pseudo_legal_moves()
     
     def get_game_status(self) -> str:
         """

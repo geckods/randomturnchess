@@ -143,15 +143,15 @@ class ChessUI:
                         break
                 else:
                     # Human move
-                    legal_moves = self.game.get_legal_moves()
-                    print(f"\nLegal moves: {len(legal_moves)}")
+                    pseudo_legal_moves = self.game.get_pseudo_legal_moves()
+                    print(f"\nPseudo-legal moves: {len(pseudo_legal_moves)}")
                     
-                    # Show first 10 legal moves for reference
-                    if legal_moves:
-                        moves_display = [str(move) for move in legal_moves[:10]]
+                    # Show first 10 pseudo-legal moves for reference
+                    if pseudo_legal_moves:
+                        moves_display = [str(move) for move in pseudo_legal_moves[:10]]
                         print(f"Sample moves: {', '.join(moves_display)}")
-                        if len(legal_moves) > 10:
-                            print(f"... and {len(legal_moves) - 10} more")
+                        if len(pseudo_legal_moves) > 10:
+                            print(f"... and {len(pseudo_legal_moves) - 10} more")
                     
                     while True:
                         command = input(f"\n{self.game.get_current_player()} to move: ").strip()
