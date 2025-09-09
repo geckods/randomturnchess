@@ -6,9 +6,9 @@ Runs 100 games of expectiminimax depth 3 vs stockfish in parallel,
 with half the games as white and half as black, and collates statistics.
 """
 
-import asyncio
 import concurrent.futures
 import time
+import threading
 from collections import defaultdict
 from random_turn_chess import RandomTurnChess
 import chess
@@ -16,6 +16,7 @@ import sys
 import os
 import json
 from datetime import datetime
+import signal
 
 class TournamentGame:
     """Represents a single tournament game."""
@@ -47,6 +48,11 @@ class TournamentGame:
             
             # Play the game
             move_count = 0
+            print(f"\n--- Game {self.game_id} ---")
+            print(f"White: {self.white_engine}, Black: {self.black_engine}")
+            print("Initial position:")
+            print(game.board)
+            
             while not game.game_over and move_count < self.max_moves:
                 move = game.get_move_for_current_player()
                 if move:
@@ -59,10 +65,16 @@ class TournamentGame:
                         'player': game.get_current_player(),
                         'fen': game.board.fen()
                     })
+                    
+                    # Show move and board state
+                    print(f"Move {move_count}: {move} by {game.get_current_player()}")
+                    print(game.board)
+                    print()
                 else:
                     break
                 
                 if game.game_over:
+                    print(f"Game Over! Winner: {game.winner}")
                     break
             
             # Record results
@@ -104,7 +116,7 @@ class TournamentGame:
         }
 
 def run_single_game(args):
-    """Run a single game - wrapper for multiprocessing."""
+    """Run a single game - wrapper for threading."""
     game_id, white_engine, black_engine, max_moves = args
     game = TournamentGame(game_id, white_engine, black_engine, max_moves)
     return game.play_game()
@@ -126,15 +138,15 @@ def print_progress_bar(completed, total, start_time, width=50):
     print(f"\rProgress: |{bar}| {completed}/{total} ({percent:.1%}) {elapsed:.0f}s elapsed, {eta_str}", end='', flush=True)
 
 def run_tournament(num_games=100, max_workers=10, max_moves=100):
-    """Run the tournament with parallel execution."""
+    """Run the tournament with parallel execution using threads."""
     
-    print(f"🏆 RANDOM TURN CHESS TOURNAMENT")
-    print(f"{'='*50}")
+    print(f"🏆 RANDOM TURN CHESS TOURNAMENT (THREADED)")
+    print(f"{'='*60}")
     print(f"Expectiminimax (Depth 3) vs Stockfish")
     print(f"Total Games: {num_games}")
     print(f"Parallel Workers: {max_workers}")
     print(f"Max Moves per Game: {max_moves}")
-    print(f"{'='*50}")
+    print(f"{'='*60}")
     
     # Create output directory
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -161,44 +173,77 @@ def run_tournament(num_games=100, max_workers=10, max_moves=100):
     print(f"Output directory: {output_dir}")
     start_time = time.time()
     
-    # Run games in parallel
+    # Global flag for interruption
+    tournament_interrupted = threading.Event()
+    
+    def signal_handler(signum, frame):
+        print(f"\n\nTournament interrupted by user (signal {signum})")
+        tournament_interrupted.set()
+    
+    # Set up signal handler for graceful interruption
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+    
+    # Run games in parallel using threads
     results = []
-    with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
         # Submit all games
         future_to_game = {executor.submit(run_single_game, config): config[0] for config in games_config}
         
         # Collect results as they complete
         completed = 0
-        for future in concurrent.futures.as_completed(future_to_game):
-            game_id = future_to_game[future]
-            try:
-                result = future.result()
-                results.append(result)
-                completed += 1
+        try:
+            for future in concurrent.futures.as_completed(future_to_game, timeout=3600):  # 1 hour timeout
+                # Check if tournament was interrupted
+                if tournament_interrupted.is_set():
+                    print(f"\nCancelling remaining games...")
+                    # Cancel remaining futures
+                    for f in future_to_game:
+                        f.cancel()
+                    break
                 
-                # Write individual game to file
-                game_file = os.path.join(output_dir, f"game_{game_id:03d}.json")
-                with open(game_file, 'w') as f:
-                    json.dump(result.to_dict(), f, indent=2)
-                
-                # Progress bar
-                print_progress_bar(completed, num_games, start_time)
+                game_id = future_to_game[future]
+                try:
+                    result = future.result()
+                    results.append(result)
+                    completed += 1
                     
-            except Exception as e:
-                print(f"\nGame {game_id} failed: {e}")
-                # Create a failed game result
-                failed_game = TournamentGame(game_id, "expectiminimax", "stockfish", max_moves)
-                failed_game.result = "Error"
-                failed_game.error = str(e)
-                results.append(failed_game)
-                completed += 1
-                
-                # Write failed game to file
-                game_file = os.path.join(output_dir, f"game_{game_id:03d}.json")
-                with open(game_file, 'w') as f:
-                    json.dump(failed_game.to_dict(), f, indent=2)
-                
-                print_progress_bar(completed, num_games, start_time)
+                    # Write individual game to file
+                    game_file = os.path.join(output_dir, f"game_{game_id:03d}.json")
+                    with open(game_file, 'w') as f:
+                        json.dump(result.to_dict(), f, indent=2)
+                    
+                    # Progress bar
+                    print_progress_bar(completed, num_games, start_time)
+                        
+                except Exception as e:
+                    print(f"\nGame {game_id} failed: {e}")
+                    # Create a failed game result
+                    failed_game = TournamentGame(game_id, "expectiminimax", "stockfish", max_moves)
+                    failed_game.result = "Error"
+                    failed_game.error = str(e)
+                    results.append(failed_game)
+                    completed += 1
+                    
+                    # Write failed game to file
+                    game_file = os.path.join(output_dir, f"game_{game_id:03d}.json")
+                    with open(game_file, 'w') as f:
+                        json.dump(failed_game.to_dict(), f, indent=2)
+                    
+                    print_progress_bar(completed, num_games, start_time)
+        
+        except KeyboardInterrupt:
+            print(f"\nTournament interrupted by user.")
+            tournament_interrupted.set()
+            # Cancel remaining futures
+            for f in future_to_game:
+                f.cancel()
+        except concurrent.futures.TimeoutError:
+            print(f"\nTournament timed out after 1 hour.")
+            tournament_interrupted.set()
+            # Cancel remaining futures
+            for f in future_to_game:
+                f.cancel()
     
     print()  # New line after progress bar
     end_time = time.time()
