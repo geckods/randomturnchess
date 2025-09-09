@@ -1,0 +1,224 @@
+#!/usr/bin/env python3
+"""
+Random Turn Chess Game
+
+A chess variant where the turn order is determined by coin flips
+rather than alternating between players.
+"""
+
+import chess
+import random
+from typing import Optional, Tuple, List
+
+
+class RandomTurnChess:
+    """
+    A chess game where turns are determined by random coin flips.
+    Each move, a coin is flipped to determine if it's black's or white's turn.
+    """
+    
+    def __init__(self):
+        self.board = chess.Board()
+        self.move_history = []
+        self.turn_history = []  # Track which player moved each turn
+        self.game_over = False
+        self.winner = None
+        
+    def flip_coin(self) -> bool:
+        """
+        Flip a coin to determine the next player.
+        Returns True for White, False for Black.
+        """
+        return random.choice([True, False])
+    
+    def get_current_player(self) -> str:
+        """
+        Get the current player based on the board's turn.
+        Returns 'White' or 'Black'.
+        """
+        return 'White' if self.board.turn else 'Black'
+    
+    def get_legal_moves(self) -> List[chess.Move]:
+        """
+        Get all legal moves for the current player.
+        """
+        return list(self.board.legal_moves)
+    
+    def make_move(self, move: chess.Move) -> bool:
+        """
+        Attempt to make a move. The move must be legal for the current player.
+        Returns True if the move was successful, False otherwise.
+        """
+        if self.game_over:
+            return False
+            
+        if move not in self.get_legal_moves():
+            return False
+            
+        # Record the move and which player made it
+        self.move_history.append(move)
+        self.turn_history.append(self.get_current_player())
+        
+        # Make the move
+        self.board.push(move)
+        
+        # Check for game over conditions
+        self._check_game_over()
+        
+        # Flip coin to determine next player
+        if not self.game_over:
+            next_player = self.flip_coin()
+            # Set the turn based on the coin flip
+            self.board.turn = next_player
+        
+        return True
+    
+    def _check_game_over(self):
+        """
+        Check if the game is over and set the winner.
+        """
+        if self.board.is_checkmate():
+            self.game_over = True
+            self.winner = 'Black' if self.board.turn else 'White'
+        elif self.board.is_stalemate():
+            self.game_over = True
+            self.winner = 'Draw'
+        elif self.board.is_insufficient_material():
+            self.game_over = True
+            self.winner = 'Draw'
+        elif self.board.is_seventyfive_moves():
+            self.game_over = True
+            self.winner = 'Draw'
+        elif self.board.is_fivefold_repetition():
+            self.game_over = True
+            self.winner = 'Draw'
+    
+    def get_board_unicode(self) -> str:
+        """
+        Get a Unicode representation of the board.
+        """
+        return str(self.board)
+    
+    def get_fen(self) -> str:
+        """
+        Get the FEN representation of the current position.
+        """
+        return self.board.fen()
+    
+    def get_move_history(self) -> List[Tuple[str, chess.Move]]:
+        """
+        Get the move history with player information.
+        Returns a list of (player, move) tuples.
+        """
+        return list(zip(self.turn_history, self.move_history))
+    
+    def is_legal_move(self, move: chess.Move) -> bool:
+        """
+        Check if a move is legal for the current player.
+        """
+        return move in self.get_legal_moves()
+    
+    def get_game_status(self) -> str:
+        """
+        Get the current game status.
+        """
+        if self.game_over:
+            if self.winner == 'Draw':
+                return "Game Over - Draw"
+            else:
+                return f"Game Over - {self.winner} wins!"
+        else:
+            current_player = self.get_current_player()
+            if self.board.is_check():
+                return f"{current_player} to move (CHECK!)"
+            else:
+                return f"{current_player} to move"
+    
+    def reset(self):
+        """
+        Reset the game to the starting position.
+        """
+        self.board = chess.Board()
+        self.move_history = []
+        self.turn_history = []
+        self.game_over = False
+        self.winner = None
+
+
+def main():
+    """
+    Simple command-line interface for the Random Turn Chess game.
+    """
+    game = RandomTurnChess()
+    
+    print("Welcome to Random Turn Chess!")
+    print("In this variant, turns are determined by coin flips.")
+    print("Type 'help' for commands, 'quit' to exit.")
+    print()
+    
+    while not game.game_over:
+        print(f"\n{game.get_board_unicode()}")
+        print(f"\nStatus: {game.get_game_status()}")
+        
+        if game.game_over:
+            break
+            
+        legal_moves = game.get_legal_moves()
+        print(f"\nLegal moves: {len(legal_moves)}")
+        
+        # Show first 10 legal moves for reference
+        if legal_moves:
+            moves_display = [str(move) for move in legal_moves[:10]]
+            print(f"Sample moves: {', '.join(moves_display)}")
+            if len(legal_moves) > 10:
+                print(f"... and {len(legal_moves) - 10} more")
+        
+        command = input("\nEnter move (e.g., 'e2e4') or command: ").strip().lower()
+        
+        if command == 'quit':
+            break
+        elif command == 'help':
+            print("\nCommands:")
+            print("  <move>     - Make a move (e.g., 'e2e4', 'Nf3', 'O-O')")
+            print("  status     - Show game status")
+            print("  history    - Show move history")
+            print("  reset      - Reset the game")
+            print("  help       - Show this help")
+            print("  quit       - Exit the game")
+        elif command == 'status':
+            print(f"\n{game.get_game_status()}")
+        elif command == 'history':
+            history = game.get_move_history()
+            if history:
+                print("\nMove History:")
+                for i, (player, move) in enumerate(history, 1):
+                    print(f"  {i}. {player}: {move}")
+            else:
+                print("\nNo moves made yet.")
+        elif command == 'reset':
+            game.reset()
+            print("\nGame reset to starting position.")
+        else:
+            # Try to parse as a move
+            try:
+                move = chess.Move.from_uci(command)
+                if game.make_move(move):
+                    print(f"Move {move} made by {game.turn_history[-1]}")
+                else:
+                    print("Illegal move! Try again.")
+            except ValueError:
+                print("Invalid move format. Use UCI notation (e.g., 'e2e4') or a command.")
+    
+    if game.game_over:
+        print(f"\n{game.get_board_unicode()}")
+        print(f"\n{game.get_game_status()}")
+        
+        history = game.get_move_history()
+        if history:
+            print("\nFinal Move History:")
+            for i, (player, move) in enumerate(history, 1):
+                print(f"  {i}. {player}: {move}")
+
+
+if __name__ == "__main__":
+    main()
