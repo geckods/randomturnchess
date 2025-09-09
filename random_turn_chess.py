@@ -111,7 +111,16 @@ class RandomTurnChess:
                 return move
         except Exception as e:
             print(f"Engine '{engine_name}' error: {e}")
-            return None
+            print("Checking for king capture moves...")
+            
+            # Check if any pseudo-legal move results in king capture
+            king_capture_move = self.find_king_capture_move(is_white)
+            if king_capture_move:
+                print(f"Found king capture move: {king_capture_move}")
+                return king_capture_move
+            else:
+                print("No king capture moves available")
+                return None
     
     def get_current_player(self) -> str:
         """
@@ -132,6 +141,23 @@ class RandomTurnChess:
         This allows moves that would normally be illegal (like moving into check).
         """
         return list(self.board.pseudo_legal_moves)
+    
+    def find_king_capture_move(self, is_white: bool) -> Optional[chess.Move]:
+        """
+        Find a move that would capture the opponent's king.
+        Returns the first king capture move found, or None if none exist.
+        """
+        opponent_king_square = self.board.king(not is_white)  # Get opponent's king square
+        
+        if opponent_king_square is None:
+            return None  # Opponent's king already captured
+        
+        # Check all pseudo-legal moves to see if any would capture the king
+        for move in self.get_pseudo_legal_moves():
+            if move.to_square == opponent_king_square:
+                return move
+        
+        return None
     
     def make_move(self, move: chess.Move) -> bool:
         """
