@@ -42,3 +42,6 @@ Thumbs.db
 # Game saves/logs
 *.pgn
 *.log
+
+# Tournament results
+tournament_*/
