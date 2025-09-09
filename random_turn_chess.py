@@ -12,6 +12,7 @@ import random
 import time
 import subprocess
 import sys
+from expectiminimax_bot import ExpectiminimaxBot
 from typing import Optional, Tuple, List, Union
 
 
@@ -81,6 +82,14 @@ class RandomTurnChess:
             except:
                 pass
             self.black_engine_process = None
+        
+        # Stop expectiminimax bot if it exists
+        if hasattr(self, 'expectiminimax_bot'):
+            try:
+                self.expectiminimax_bot.stop_engine()
+            except:
+                pass
+            delattr(self, 'expectiminimax_bot')
     
     def get_engine_move(self, is_white: bool) -> Optional[chess.Move]:
         """
@@ -91,36 +100,72 @@ class RandomTurnChess:
         
         if not engine_name:
             return None
-            
-        try:
-            # Create a fresh engine process to avoid state confusion
-            with chess.engine.SimpleEngine.popen_uci(engine_name) as engine:
+        
+        # Check if it's the expectiminimax bot
+        if engine_name == "expectiminimax":
+            try:
                 # Create a fresh board copy and clear the move stack
                 fresh_board = self.board.copy()
                 fresh_board.clear_stack()
                 
-                # Get the best move from the engine using the fresh board
-                result = engine.play(fresh_board, chess.engine.Limit(time=1.0))
-                move = result.move
+                # Use a single expectiminimax bot instance per game
+                if not hasattr(self, 'expectiminimax_bot'):
+                    self.expectiminimax_bot = ExpectiminimaxBot(depth=2, debug=False)  # Reduced depth for speed
+                    self.expectiminimax_bot.start_engine()
+                
+                # Get the best move from the bot
+                move = self.expectiminimax_bot.get_best_move(fresh_board)
                 
                 # Verify the move is legal for the current player
-                if not self.is_legal_move(move):
-                    print(f"Engine made illegal move: {move} (expected {'White' if is_white else 'Black'} move)")
+                if move and not self.is_legal_move(move):
+                    print(f"Expectiminimax bot made illegal move: {move} (expected {'White' if is_white else 'Black'} move)")
                     return None
                 
                 return move
-        except Exception as e:
-            print(f"Engine '{engine_name}' error: {e}")
-            print("Checking for king capture moves...")
-            
-            # Check if any pseudo-legal move results in king capture
-            king_capture_move = self.find_king_capture_move(is_white)
-            if king_capture_move:
-                print(f"Found king capture move: {king_capture_move}")
-                return king_capture_move
-            else:
-                print("No king capture moves available")
-                return None
+                    
+            except Exception as e:
+                print(f"Expectiminimax bot error: {e}")
+                print("Checking for king capture moves...")
+                
+                # Check if any pseudo-legal move results in king capture
+                king_capture_move = self.find_king_capture_move(is_white)
+                if king_capture_move:
+                    print(f"Found king capture move: {king_capture_move}")
+                    return king_capture_move
+                else:
+                    print("No king capture moves available")
+                    return None
+        else:
+            # Use regular UCI engine (Stockfish, etc.)
+            try:
+                # Create a fresh engine process to avoid state confusion
+                with chess.engine.SimpleEngine.popen_uci(engine_name) as engine:
+                    # Create a fresh board copy and clear the move stack
+                    fresh_board = self.board.copy()
+                    fresh_board.clear_stack()
+                    
+                    # Get the best move from the engine using the fresh board
+                    result = engine.play(fresh_board, chess.engine.Limit(time=1.0))
+                    move = result.move
+                    
+                    # Verify the move is legal for the current player
+                    if not self.is_legal_move(move):
+                        print(f"Engine made illegal move: {move} (expected {'White' if is_white else 'Black'} move)")
+                        return None
+                    
+                    return move
+            except Exception as e:
+                print(f"Engine '{engine_name}' error: {e}")
+                print("Checking for king capture moves...")
+                
+                # Check if any pseudo-legal move results in king capture
+                king_capture_move = self.find_king_capture_move(is_white)
+                if king_capture_move:
+                    print(f"Found king capture move: {king_capture_move}")
+                    return king_capture_move
+                else:
+                    print("No king capture moves available")
+                    return None
     
     def get_current_player(self) -> str:
         """

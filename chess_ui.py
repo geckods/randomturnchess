@@ -59,13 +59,35 @@ class ChessUI:
         print("="*40)
         
         # Get engine paths
-        white_engine = input("White engine path (or press Enter for none): ").strip()
-        if not white_engine:
+        print("Engine options:")
+        print("1. Stockfish (default)")
+        print("2. Expectiminimax bot (custom Random Turn Chess bot)")
+        print("3. Custom engine path")
+        print("4. None (human player)")
+        
+        white_choice = input("White engine choice (1-4, default 1): ").strip()
+        if white_choice == "2":
+            white_engine = "expectiminimax"
+        elif white_choice == "3":
+            white_engine = input("White engine path: ").strip()
+            if not white_engine:
+                white_engine = "stockfish"
+        elif white_choice == "4":
             white_engine = None
+        else:
+            white_engine = "stockfish"
             
-        black_engine = input("Black engine path (or press Enter for none): ").strip()
-        if not black_engine:
+        black_choice = input("Black engine choice (1-4, default 1): ").strip()
+        if black_choice == "2":
+            black_engine = "expectiminimax"
+        elif black_choice == "3":
+            black_engine = input("Black engine path: ").strip()
+            if not black_engine:
+                black_engine = "stockfish"
+        elif black_choice == "4":
             black_engine = None
+        else:
+            black_engine = "stockfish"
         
         # Get wait time
         while True:
@@ -280,8 +302,8 @@ def main():
     Main entry point with command line argument support.
     """
     parser = argparse.ArgumentParser(description='Random Turn Chess with Engine Support')
-    parser.add_argument('--white-engine', type=str, help='Path to white engine executable')
-    parser.add_argument('--black-engine', type=str, help='Path to black engine executable')
+    parser.add_argument('--white-engine', type=str, help='Path to white engine executable (or "expectiminimax" for custom bot)')
+    parser.add_argument('--black-engine', type=str, help='Path to black engine executable (or "expectiminimax" for custom bot)')
     parser.add_argument('--wait-time', type=float, default=1.0, help='Engine wait time in seconds (default: 1.0)')
     parser.add_argument('--pause', action='store_true', help='Pause after each engine move')
     parser.add_argument('--mode', type=str, choices=['pvp', 'pv-engine-white', 'pv-engine-black', 'engine-vs-engine'],
