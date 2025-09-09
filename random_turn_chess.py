@@ -52,18 +52,26 @@ class RandomTurnChess:
         Start the chess engines if configured.
         """
         if self.white_engine:
-            try:
-                self.white_engine_process = chess.engine.SimpleEngine.popen_uci(self.white_engine)
-            except Exception as e:
-                print(f"Warning: Could not start white engine '{self.white_engine}': {e}")
-                self.white_engine = None
+            if self.white_engine == "expectiminimax":
+                # Expectiminimax bot is handled differently - no UCI engine to start
+                pass
+            else:
+                try:
+                    self.white_engine_process = chess.engine.SimpleEngine.popen_uci(self.white_engine)
+                except Exception as e:
+                    print(f"Warning: Could not start white engine '{self.white_engine}': {e}")
+                    self.white_engine = None
                 
         if self.black_engine:
-            try:
-                self.black_engine_process = chess.engine.SimpleEngine.popen_uci(self.black_engine)
-            except Exception as e:
-                print(f"Warning: Could not start black engine '{self.black_engine}': {e}")
-                self.black_engine = None
+            if self.black_engine == "expectiminimax":
+                # Expectiminimax bot is handled differently - no UCI engine to start
+                pass
+            else:
+                try:
+                    self.black_engine_process = chess.engine.SimpleEngine.popen_uci(self.black_engine)
+                except Exception as e:
+                    print(f"Warning: Could not start black engine '{self.black_engine}': {e}")
+                    self.black_engine = None
     
     def stop_engines(self):
         """
