@@ -7,8 +7,12 @@ rather than alternating between players.
 """
 
 import chess
+import chess.engine
 import random
-from typing import Optional, Tuple, List
+import time
+import subprocess
+import sys
+from typing import Optional, Tuple, List, Union
 
 
 class RandomTurnChess:
@@ -17,12 +21,23 @@ class RandomTurnChess:
     Each move, a coin is flipped to determine if it's black's or white's turn.
     """
     
-    def __init__(self):
+    def __init__(self, white_engine: Optional[str] = None, black_engine: Optional[str] = None, 
+                 engine_wait_time: float = 1.0, engine_pause: bool = False):
         self.board = chess.Board()
         self.move_history = []
         self.turn_history = []  # Track which player moved each turn
         self.game_over = False
         self.winner = None
+        
+        # Engine configuration
+        self.white_engine = white_engine
+        self.black_engine = black_engine
+        self.engine_wait_time = engine_wait_time
+        self.engine_pause = engine_pause
+        
+        # Engine processes
+        self.white_engine_process = None
+        self.black_engine_process = None
         
     def flip_coin(self) -> bool:
         """
@@ -30,6 +45,65 @@ class RandomTurnChess:
         Returns True for White, False for Black.
         """
         return random.choice([True, False])
+    
+    def start_engines(self):
+        """
+        Start the chess engines if configured.
+        """
+        if self.white_engine:
+            try:
+                self.white_engine_process = chess.engine.SimpleEngine.popen_uci(self.white_engine)
+            except Exception as e:
+                print(f"Warning: Could not start white engine '{self.white_engine}': {e}")
+                self.white_engine = None
+                
+        if self.black_engine:
+            try:
+                self.black_engine_process = chess.engine.SimpleEngine.popen_uci(self.black_engine)
+            except Exception as e:
+                print(f"Warning: Could not start black engine '{self.black_engine}': {e}")
+                self.black_engine = None
+    
+    def stop_engines(self):
+        """
+        Stop the chess engines if they are running.
+        """
+        if self.white_engine_process:
+            try:
+                self.white_engine_process.quit()
+            except:
+                pass
+            self.white_engine_process = None
+            
+        if self.black_engine_process:
+            try:
+                self.black_engine_process.quit()
+            except:
+                pass
+            self.black_engine_process = None
+    
+    def get_engine_move(self, is_white: bool) -> Optional[chess.Move]:
+        """
+        Get a move from the appropriate engine.
+        Returns None if no engine is configured or if engine fails.
+        """
+        engine_process = self.white_engine_process if is_white else self.black_engine_process
+        engine_name = self.white_engine if is_white else self.black_engine
+        
+        if not engine_process:
+            return None
+            
+        try:
+            # Create a temporary board with the correct turn for the engine
+            temp_board = self.board.copy()
+            temp_board.turn = is_white
+            
+            # Get the best move from the engine
+            result = engine_process.play(temp_board, chess.engine.Limit(time=1.0))
+            return result.move
+        except Exception as e:
+            print(f"Engine '{engine_name}' error: {e}")
+            return None
     
     def get_current_player(self) -> str:
         """
@@ -72,6 +146,33 @@ class RandomTurnChess:
             self.board.turn = next_player
         
         return True
+    
+    def get_move_for_current_player(self) -> Optional[chess.Move]:
+        """
+        Get a move for the current player (either from engine or return None for human input).
+        Returns the move if it's an engine turn, None if it's a human turn.
+        """
+        is_white = self.board.turn
+        engine_name = self.white_engine if is_white else self.black_engine
+        
+        if engine_name:
+            print(f"\n{self.get_current_player()} (Engine: {engine_name}) is thinking...")
+            move = self.get_engine_move(is_white)
+            
+            if move and self.is_legal_move(move):
+                # Add wait time and/or pause
+                if self.engine_wait_time > 0:
+                    time.sleep(self.engine_wait_time)
+                
+                if self.engine_pause:
+                    input("Press Enter to continue...")
+                
+                return move
+            else:
+                print(f"Engine failed or made illegal move, switching to human input for {self.get_current_player()}")
+                return None
+        
+        return None
     
     def _check_game_over(self):
         """
@@ -143,6 +244,12 @@ class RandomTurnChess:
         self.turn_history = []
         self.game_over = False
         self.winner = None
+    
+    def cleanup(self):
+        """
+        Clean up resources (stop engines).
+        """
+        self.stop_engines()
 
 
 def main():
