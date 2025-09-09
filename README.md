@@ -56,17 +56,46 @@ You can also start games directly from the command line:
 python chess_ui.py --mode pvp
 
 # Human vs Engine (White Human, Black Engine)
-python chess_ui.py --mode pv-engine-black --black-engine /path/to/engine
+python chess_ui.py --mode pv-engine-black --black-engine stockfish
 
 # Human vs Engine (White Engine, Black Human)  
-python chess_ui.py --mode pv-engine-white --white-engine /path/to/engine
+python chess_ui.py --mode pv-engine-white --white-engine stockfish
 
 # Engine vs Engine
-python chess_ui.py --mode engine-vs-engine --white-engine /path/to/white_engine --black-engine /path/to/black_engine
+python chess_ui.py --mode engine-vs-engine --white-engine stockfish --black-engine stockfish
+
+# Expectiminimax Bot vs Stockfish
+python chess_ui.py --mode engine-vs-engine --white-engine expectiminimax --black-engine stockfish
 
 # With custom timing
-python chess_ui.py --mode pv-engine-black --black-engine /path/to/engine --wait-time 2.0 --pause
+python chess_ui.py --mode pv-engine-black --black-engine stockfish --wait-time 2.0 --pause
 ```
+
+### Quick Start Examples
+
+Here are some ready-to-run examples:
+
+```bash
+# 1. Human vs Human (PvP) Mode
+python chess_ui.py --mode pvp
+
+# 2. Human vs Engine (Black Engine) Mode
+python chess_ui.py --mode pv-engine-black --black-engine stockfish
+
+# 3. Human vs Engine (White Engine) Mode
+python chess_ui.py --mode pv-engine-white --white-engine stockfish
+
+# 4. Engine vs Engine Mode
+python chess_ui.py --mode engine-vs-engine --white-engine stockfish --black-engine stockfish
+
+# 5. Interactive Menu Mode
+python chess_ui.py
+
+# 6. With Custom Timing
+python chess_ui.py --mode pv-engine-black --black-engine stockfish --wait-time 2.0 --pause
+```
+
+All modes support the random turn mechanic where coin flips determine which player moves next, making each game unique!
 
 ### Command Line Arguments
 
@@ -140,6 +169,7 @@ Download from [Stockfish website](https://stockfishchess.org/download/) and extr
 
 - `random_turn_chess.py` - Core game logic and RandomTurnChess class
 - `chess_ui.py` - Main UI with menu system and command line interface
+- `expectiminimax_bot.py` - Custom expectiminimax bot for Random Turn Chess
 - `requirements.txt` - Python dependencies
 - `README.md` - This documentation
 
