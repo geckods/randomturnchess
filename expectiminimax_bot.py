@@ -137,9 +137,25 @@ class ExpectiminimaxBot:
         """
         return board.king(color) is None
     
+    def move_captures_king(self, board: chess.Board, move: chess.Move, opponent_color: chess.Color) -> bool:
+        """
+        Check if a move captures the opponent's king.
+        
+        Args:
+            board: The chess position
+            move: The move to check
+            opponent_color: The color of the opponent's king
+            
+        Returns:
+            True if the move captures the opponent's king, False otherwise
+        """
+        captured_piece = board.piece_at(move.to_square)
+        return captured_piece and captured_piece.piece_type == chess.KING and captured_piece.color == opponent_color
+    
     def get_pseudo_legal_moves(self, board: chess.Board) -> List[chess.Move]:
         """
         Get all pseudo-legal moves for the current player.
+        In Random Turn Chess, we use pseudo-legal moves since the game only ends on king capture.
         
         Args:
             board: The chess position
@@ -162,14 +178,7 @@ class ExpectiminimaxBot:
         Returns:
             Expected value of the position
         """
-        # Terminal conditions
-        if depth == 0:
-            eval_score = self.evaluate_position(board)
-            if self.debug:
-                print(f"{indent}Depth {depth}: Terminal evaluation = {eval_score:.2f}")
-            return eval_score
-        
-        # Check for king capture (immediate win/loss)
+        # Check for king capture (immediate win/loss) - this takes priority over everything
         if is_maximizing and self.is_king_captured(board, chess.BLACK):
             if self.debug:
                 print(f"{indent}Depth {depth}: Black king captured! White wins (+∞)")
@@ -178,6 +187,13 @@ class ExpectiminimaxBot:
             if self.debug:
                 print(f"{indent}Depth {depth}: White king captured! Black wins (-∞)")
             return -self.infinity  # Black wins
+        
+        # Terminal conditions
+        if depth == 0:
+            eval_score = self.evaluate_position(board)
+            if self.debug:
+                print(f"{indent}Depth {depth}: Terminal evaluation = {eval_score:.2f}")
+            return eval_score
         
         # Get all possible moves
         moves = self.get_pseudo_legal_moves(board)
@@ -189,6 +205,20 @@ class ExpectiminimaxBot:
         
         if self.debug:
             print(f"{indent}Depth {depth}: Evaluating {len(moves)} moves for {'White' if is_maximizing else 'Black'}")
+        
+        # Determine opponent color
+        opponent_color = chess.BLACK if is_maximizing else chess.WHITE
+        
+        # First, check if any move captures the opponent's king (immediate win)
+        king_capture_moves = []
+        for move in moves:
+            if self.move_captures_king(board, move, opponent_color):
+                king_capture_moves.append(move)
+        
+        if king_capture_moves:
+            if self.debug:
+                print(f"{indent}Found {len(king_capture_moves)} king capture moves: {king_capture_moves}")
+            return self.infinity if is_maximizing else -self.infinity
         
         # Calculate expected value considering random turn mechanic
         total_value = 0

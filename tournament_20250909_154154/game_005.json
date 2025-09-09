@@ -1,0 +1,104 @@
+{
+  "game_id": 5,
+  "white_engine": "expectiminimax",
+  "black_engine": "stockfish",
+  "result": "White",
+  "winner": "White",
+  "moves_played": 15,
+  "duration": 37.29354453086853,
+  "error": null,
+  "move_history": [
+    {
+      "move": "g1f3",
+      "move_number": 1,
+      "player": "White",
+      "fen": "rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R w KQkq - 1 1"
+    },
+    {
+      "move": "f3g5",
+      "move_number": 2,
+      "player": "White",
+      "fen": "rnbqkbnr/pppppppp/8/6N1/8/8/PPPPPPPP/RNBQKB1R w KQkq - 2 1"
+    },
+    {
+      "move": "g5e4",
+      "move_number": 3,
+      "player": "White",
+      "fen": "rnbqkbnr/pppppppp/8/8/4N3/8/PPPPPPPP/RNBQKB1R w KQkq - 3 1"
+    },
+    {
+      "move": "e4d6",
+      "move_number": 4,
+      "player": "Black",
+      "fen": "rnbqkbnr/pppppppp/3N4/8/8/8/PPPPPPPP/RNBQKB1R b KQkq - 4 1"
+    },
+    {
+      "move": "c7d6",
+      "move_number": 5,
+      "player": "Black",
+      "fen": "rnbqkbnr/pp1ppppp/3p4/8/8/8/PPPPPPPP/RNBQKB1R b KQkq - 0 2"
+    },
+    {
+      "move": "d6d5",
+      "move_number": 6,
+      "player": "Black",
+      "fen": "rnbqkbnr/pp1ppppp/8/3p4/8/8/PPPPPPPP/RNBQKB1R b KQkq - 0 3"
+    },
+    {
+      "move": "g8f6",
+      "move_number": 7,
+      "player": "Black",
+      "fen": "rnbqkb1r/pp1ppppp/5n2/3p4/8/8/PPPPPPPP/RNBQKB1R b KQkq - 1 4"
+    },
+    {
+      "move": "d5d4",
+      "move_number": 8,
+      "player": "Black",
+      "fen": "rnbqkb1r/pp1ppppp/5n2/8/3p4/8/PPPPPPPP/RNBQKB1R b KQkq - 0 5"
+    },
+    {
+      "move": "e7e5",
+      "move_number": 9,
+      "player": "Black",
+      "fen": "rnbqkb1r/pp1p1ppp/5n2/4p3/3p4/8/PPPPPPPP/RNBQKB1R b KQkq - 0 6"
+    },
+    {
+      "move": "f8d6",
+      "move_number": 10,
+      "player": "White",
+      "fen": "rnbqk2r/pp1p1ppp/3b1n2/4p3/3p4/8/PPPPPPPP/RNBQKB1R w KQkq - 1 7"
+    },
+    {
+      "move": "f2f4",
+      "move_number": 11,
+      "player": "White",
+      "fen": "rnbqk2r/pp1p1ppp/3b1n2/4p3/3p1P2/8/PPPPP1PP/RNBQKB1R w KQkq - 0 7"
+    },
+    {
+      "move": "f4e5",
+      "move_number": 12,
+      "player": "White",
+      "fen": "rnbqk2r/pp1p1ppp/3b1n2/4P3/3p4/8/PPPPP1PP/RNBQKB1R w KQkq - 0 7"
+    },
+    {
+      "move": "e5e6",
+      "move_number": 13,
+      "player": "White",
+      "fen": "rnbqk2r/pp1p1ppp/3bPn2/8/3p4/8/PPPPP1PP/RNBQKB1R w KQkq - 0 7"
+    },
+    {
+      "move": "e6f7",
+      "move_number": 14,
+      "player": "White",
+      "fen": "rnbqk2r/pp1p1Ppp/3b1n2/8/3p4/8/PPPPP1PP/RNBQKB1R w KQkq - 0 7"
+    },
+    {
+      "move": "f7e8q",
+      "move_number": 15,
+      "player": "Black",
+      "fen": "rnbqQ2r/pp1p2pp/3b1n2/8/3p4/8/PPPPP1PP/RNBQKB1R b KQ - 0 7"
+    }
+  ],
+  "start_time": 1757458004.141388,
+  "end_time": 1757458041.4349325
+}

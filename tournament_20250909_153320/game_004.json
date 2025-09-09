@@ -1,0 +1,122 @@
+{
+  "game_id": 4,
+  "white_engine": "expectiminimax",
+  "black_engine": "stockfish",
+  "result": "White",
+  "winner": "White",
+  "moves_played": 18,
+  "duration": 68.62595510482788,
+  "error": null,
+  "move_history": [
+    {
+      "move": "g1f3",
+      "move_number": 1,
+      "player": "White",
+      "fen": "rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R w KQkq - 1 1"
+    },
+    {
+      "move": "f3g5",
+      "move_number": 2,
+      "player": "White",
+      "fen": "rnbqkbnr/pppppppp/8/6N1/8/8/PPPPPPPP/RNBQKB1R w KQkq - 2 1"
+    },
+    {
+      "move": "g5f7",
+      "move_number": 3,
+      "player": "Black",
+      "fen": "rnbqkbnr/pppppNpp/8/8/8/8/PPPPPPPP/RNBQKB1R b KQkq - 0 1"
+    },
+    {
+      "move": "e8f7",
+      "move_number": 4,
+      "player": "White",
+      "fen": "rnbq1bnr/pppppkpp/8/8/8/8/PPPPPPPP/RNBQKB1R w KQ - 0 2"
+    },
+    {
+      "move": "e2e3",
+      "move_number": 5,
+      "player": "White",
+      "fen": "rnbq1bnr/pppppkpp/8/8/8/4P3/PPPP1PPP/RNBQKB1R w KQ - 0 2"
+    },
+    {
+      "move": "f1c4",
+      "move_number": 6,
+      "player": "Black",
+      "fen": "rnbq1bnr/pppppkpp/8/8/2B5/4P3/PPPP1PPP/RNBQK2R b KQ - 1 2"
+    },
+    {
+      "move": "e7e6",
+      "move_number": 7,
+      "player": "White",
+      "fen": "rnbq1bnr/pppp1kpp/4p3/8/2B5/4P3/PPPP1PPP/RNBQK2R w KQ - 0 3"
+    },
+    {
+      "move": "c4e6",
+      "move_number": 8,
+      "player": "Black",
+      "fen": "rnbq1bnr/pppp1kpp/4B3/8/8/4P3/PPPP1PPP/RNBQK2R b KQ - 0 3"
+    },
+    {
+      "move": "d7e6",
+      "move_number": 9,
+      "player": "Black",
+      "fen": "rnbq1bnr/ppp2kpp/4p3/8/8/4P3/PPPP1PPP/RNBQK2R b KQ - 0 4"
+    },
+    {
+      "move": "g8f6",
+      "move_number": 10,
+      "player": "White",
+      "fen": "rnbq1b1r/ppp2kpp/4pn2/8/8/4P3/PPPP1PPP/RNBQK2R w KQ - 1 5"
+    },
+    {
+      "move": "d1h5",
+      "move_number": 11,
+      "player": "Black",
+      "fen": "rnbq1b1r/ppp2kpp/4pn2/7Q/8/4P3/PPPP1PPP/RNB1K2R b KQ - 2 5"
+    },
+    {
+      "move": "f6h5",
+      "move_number": 12,
+      "player": "White",
+      "fen": "rnbq1b1r/ppp2kpp/4p3/7n/8/4P3/PPPP1PPP/RNB1K2R w KQ - 0 6"
+    },
+    {
+      "move": "g2g4",
+      "move_number": 13,
+      "player": "White",
+      "fen": "rnbq1b1r/ppp2kpp/4p3/7n/6P1/4P3/PPPP1P1P/RNB1K2R w KQ - 0 6"
+    },
+    {
+      "move": "g4h5",
+      "move_number": 14,
+      "player": "White",
+      "fen": "rnbq1b1r/ppp2kpp/4p3/7P/8/4P3/PPPP1P1P/RNB1K2R w KQ - 0 6"
+    },
+    {
+      "move": "h1g1",
+      "move_number": 15,
+      "player": "Black",
+      "fen": "rnbq1b1r/ppp2kpp/4p3/7P/8/4P3/PPPP1P1P/RNB1K1R1 b Q - 1 6"
+    },
+    {
+      "move": "d8h4",
+      "move_number": 16,
+      "player": "White",
+      "fen": "rnb2b1r/ppp2kpp/4p3/7P/7q/4P3/PPPP1P1P/RNB1K1R1 w Q - 2 7"
+    },
+    {
+      "move": "g1g7",
+      "move_number": 17,
+      "player": "White",
+      "fen": "rnb2b1r/ppp2kRp/4p3/7P/7q/4P3/PPPP1P1P/RNB1K3 w Q - 0 7"
+    },
+    {
+      "move": "g7f7",
+      "move_number": 18,
+      "player": "Black",
+      "fen": "rnb2b1r/ppp2R1p/4p3/7P/7q/4P3/PPPP1P1P/RNB1K3 b Q - 0 7"
+    }
+  ],
+  "start_time": 1757457200.3941116,
+  "end_time": 1757457269.0200667
+}

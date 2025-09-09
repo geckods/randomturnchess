@@ -118,7 +118,7 @@ class RandomTurnChess:
                 
                 # Use a single expectiminimax bot instance per game
                 if not hasattr(self, 'expectiminimax_bot'):
-                    self.expectiminimax_bot = ExpectiminimaxBot(depth=2, debug=False)  # Reduced depth for speed
+                    self.expectiminimax_bot = ExpectiminimaxBot(depth=3, debug=False)  # Depth 3 for better play
                     self.expectiminimax_bot.start_engine()
                 
                 # Get the best move from the bot

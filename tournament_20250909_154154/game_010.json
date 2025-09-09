@@ -1,0 +1,50 @@
+{
+  "game_id": 10,
+  "white_engine": "stockfish",
+  "black_engine": "expectiminimax",
+  "result": "Black",
+  "winner": "Black",
+  "moves_played": 6,
+  "duration": 18.735925436019897,
+  "error": null,
+  "move_history": [
+    {
+      "move": "e2e4",
+      "move_number": 1,
+      "player": "White",
+      "fen": "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1"
+    },
+    {
+      "move": "d2d4",
+      "move_number": 2,
+      "player": "White",
+      "fen": "rnbqkbnr/pppppppp/8/8/3PP3/8/PPP2PPP/RNBQKBNR w KQkq - 0 1"
+    },
+    {
+      "move": "g1f3",
+      "move_number": 3,
+      "player": "Black",
+      "fen": "rnbqkbnr/pppppppp/8/8/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq - 1 1"
+    },
+    {
+      "move": "c7c6",
+      "move_number": 4,
+      "player": "Black",
+      "fen": "rnbqkbnr/pp1ppppp/2p5/8/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq - 0 2"
+    },
+    {
+      "move": "d8a5",
+      "move_number": 5,
+      "player": "Black",
+      "fen": "rnb1kbnr/pp1ppppp/2p5/q7/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq - 1 3"
+    },
+    {
+      "move": "a5e1",
+      "move_number": 6,
+      "player": "White",
+      "fen": "rnb1kbnr/pp1ppppp/2p5/8/3PP3/5N2/PPP2PPP/RNBQqB1R w kq - 0 4"
+    }
+  ],
+  "start_time": 1757457772.7620363,
+  "end_time": 1757457791.4979618
+}

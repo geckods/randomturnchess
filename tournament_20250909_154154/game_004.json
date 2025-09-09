@@ -1,0 +1,98 @@
+{
+  "game_id": 4,
+  "white_engine": "expectiminimax",
+  "black_engine": "stockfish",
+  "result": "White",
+  "winner": "White",
+  "moves_played": 14,
+  "duration": 41.84257435798645,
+  "error": null,
+  "move_history": [
+    {
+      "move": "g1f3",
+      "move_number": 1,
+      "player": "Black",
+      "fen": "rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 1"
+    },
+    {
+      "move": "d7d5",
+      "move_number": 2,
+      "player": "Black",
+      "fen": "rnbqkbnr/ppp1pppp/8/3p4/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 0 2"
+    },
+    {
+      "move": "c7c5",
+      "move_number": 3,
+      "player": "Black",
+      "fen": "rnbqkbnr/pp2pppp/8/2pp4/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 0 3"
+    },
+    {
+      "move": "b8c6",
+      "move_number": 4,
+      "player": "Black",
+      "fen": "r1bqkbnr/pp2pppp/2n5/2pp4/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 4"
+    },
+    {
+      "move": "g8f6",
+      "move_number": 5,
+      "player": "Black",
+      "fen": "r1bqkb1r/pp2pppp/2n2n2/2pp4/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 2 5"
+    },
+    {
+      "move": "d8a5",
+      "move_number": 6,
+      "player": "White",
+      "fen": "r1b1kb1r/pp2pppp/2n2n2/q1pp4/8/5N2/PPPPPPPP/RNBQKB1R w KQkq - 3 6"
+    },
+    {
+      "move": "b2b4",
+      "move_number": 7,
+      "player": "Black",
+      "fen": "r1b1kb1r/pp2pppp/2n2n2/q1pp4/1P6/5N2/P1PPPPPP/RNBQKB1R b KQkq - 0 6"
+    },
+    {
+      "move": "c6b4",
+      "move_number": 8,
+      "player": "Black",
+      "fen": "r1b1kb1r/pp2pppp/5n2/q1pp4/1n6/5N2/P1PPPPPP/RNBQKB1R b KQkq - 0 7"
+    },
+    {
+      "move": "c8f5",
+      "move_number": 9,
+      "player": "White",
+      "fen": "r3kb1r/pp2pppp/5n2/q1pp1b2/1n6/5N2/P1PPPPPP/RNBQKB1R w KQkq - 1 8"
+    },
+    {
+      "move": "c2c3",
+      "move_number": 10,
+      "player": "Black",
+      "fen": "r3kb1r/pp2pppp/5n2/q1pp1b2/1n6/2P2N2/P2PPPPP/RNBQKB1R b KQkq - 0 8"
+    },
+    {
+      "move": "b4c2",
+      "move_number": 11,
+      "player": "White",
+      "fen": "r3kb1r/pp2pppp/5n2/q1pp1b2/8/2P2N2/P1nPPPPP/RNBQKB1R w KQkq - 1 9"
+    },
+    {
+      "move": "d1c2",
+      "move_number": 12,
+      "player": "White",
+      "fen": "r3kb1r/pp2pppp/5n2/q1pp1b2/8/2P2N2/P1QPPPPP/RNB1KB1R w KQkq - 0 9"
+    },
+    {
+      "move": "c2a4",
+      "move_number": 13,
+      "player": "White",
+      "fen": "r3kb1r/pp2pppp/5n2/q1pp1b2/Q7/2P2N2/P2PPPPP/RNB1KB1R w KQkq - 1 9"
+    },
+    {
+      "move": "a4e8",
+      "move_number": 14,
+      "player": "Black",
+      "fen": "r3Qb1r/pp2pppp/5n2/q1pp1b2/8/2P2N2/P2PPPPP/RNB1KB1R b KQ - 0 9"
+    }
+  ],
+  "start_time": 1757457730.9191816,
+  "end_time": 1757457772.761756
+}
